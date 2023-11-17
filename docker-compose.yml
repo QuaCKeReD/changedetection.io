@@ -5,11 +5,11 @@ services:
       container_name: changedetection
       hostname: changedetection
       volumes:
-        - changedetection-data:/datastore
+        - ./changedetection-data:/datastore
 # Configurable proxy list support, see https://github.com/dgtlmoon/changedetection.io/wiki/Proxy-configuration#proxy-list-support
 #        - ./proxies.json:/datastore/proxies.json
 
-  #    environment:
+      environment:
   #        Default listening port, can also be changed with the -p option
   #      - PORT=5000
 
@@ -17,7 +17,7 @@ services:
   #      - PGID=1000
   #
   #       Alternative WebDriver/selenium URL, do not use "'s or 's!
-  #      - WEBDRIVER_URL=http://browser-chrome:4444/wd/hub
+        - WEBDRIVER_URL=http://browser-chrome:4444/wd/hub
   #
   #       WebDriver proxy settings webdriver_proxyType, webdriver_ftpProxy, webdriver_noProxy,
   #                                webdriver_proxyAutoconfigUrl, webdriver_autodetect,
@@ -60,23 +60,23 @@ services:
      
      # If WEBDRIVER or PLAYWRIGHT are enabled, changedetection container depends on that
      # and must wait before starting (substitute "browser-chrome" with "playwright-chrome" if last one is used)
-#    depends_on:
-#        browser-chrome:
-#            condition: service_started
+      depends_on:
+        browser-chrome:
+          condition: service_started
 
-#    browser-chrome:
-#        hostname: browser-chrome
-#        image: selenium/standalone-chrome-debug:3.141.59
-#        environment:
-#            - VNC_NO_PASSWORD=1
-#            - SCREEN_WIDTH=1920
-#            - SCREEN_HEIGHT=1080
-#            - SCREEN_DEPTH=24
-#        volumes:
-#            # Workaround to avoid the browser crashing inside a docker container
-#            # See https://github.com/SeleniumHQ/docker-selenium#quick-start
-#            - /dev/shm:/dev/shm
-#        restart: unless-stopped
+    browser-chrome:
+        hostname: browser-chrome
+        image: selenium/standalone-chrome-debug:3.141.59
+        environment:
+            - VNC_NO_PASSWORD=1
+            - SCREEN_WIDTH=1920
+            - SCREEN_HEIGHT=1080
+            - SCREEN_DEPTH=24
+        volumes:
+            # Workaround to avoid the browser crashing inside a docker container
+            # See https://github.com/SeleniumHQ/docker-selenium#quick-start
+            - /dev/shm:/dev/shm
+        restart: unless-stopped
 
      # Used for fetching pages via Playwright+Chrome where you need Javascript support.
 
@@ -96,6 +96,6 @@ services:
 #            - DEFAULT_BLOCK_ADS=true
 #            - DEFAULT_STEALTH=true
 
-volumes:
-  changedetection-data:
+#volumes:
+#  changedetection-data:
 
